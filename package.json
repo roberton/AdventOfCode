@@ -18,5 +18,8 @@
   "dependencies": {
     "lodash": "^3.10.1",
     "md5": "^2.0.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.4.1"
   }
 }
