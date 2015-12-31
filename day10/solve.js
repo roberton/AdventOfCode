@@ -5,46 +5,45 @@ const _ = require('lodash');
 // Answer?
 if (require.main === module) {
     main('1113222113', 30);
+    // main('1', 5);
 }
 
+// Takes a sequence as a string and number of iterations to perform,
+// such that remainingIterations=0 is a noop.
 function main(sequence, remainingIterations) {
-    // console.log(`Starting input is ${input}`);
-    // let current = input;
-    // for (let i = 0; i < iterations; i++) {
-    //     current = iterate(current);
-    //     console.log(`After ${i+1}, sequence is ${current}.`);
-    // }
-
     console.log(`Current sequence is ${sequence}. ${remainingIterations} iterations remaining.`);
     if (remainingIterations > 0) {
         const nextSequence = iterate(sequence);
         setImmediate(main, nextSequence, remainingIterations - 1);
         console.log(`New sequence is ${nextSequence}.`);
+        console.log(`New sequence's length is ${nextSequence.length}.`);
     }
     else {
         console.log(`Finished.`);
     }
 }
 
-function iterate(sequence) {
-    const sequenceArray = sequence.split();
-    return grabRun(sequence).join('');
-}
+function iterate(sequenceString) {
+    let sequence = sequenceString.split('');
+    let newSequence = [];
 
-function grabRun(sequence) {
-    if (sequence.length === 0) {
-        return [];
+    while (sequence.length > 0) {
+        const nextElementPair = calcNextElementPair(sequence);
+        newSequence.push(nextElementPair[0], nextElementPair[1]);
     }
 
-    const matchingChar = sequence[0];
-    const run = _.takeWhile(sequence, char => (char === matchingChar));
-    const remainingSequence = _.slice(sequence, run.length);
+    return newSequence.join('');
+}
 
-    let thingToReturn = [];
-    thingToReturn.push(run.length);
-    thingToReturn.push(matchingChar);
-    Array.prototype.push.apply(thingToReturn, grabRun(remainingSequence));
-    return thingToReturn;
+function calcNextElementPair(sequence) {
+    const matchingChar = sequence.shift();
+    let matchCount = 1;
+    while (sequence[0] === matchingChar) {
+        matchCount++;
+        sequence.shift();
+    }
+
+    return [matchCount, matchingChar];
 }
 
 exports.main = main;
