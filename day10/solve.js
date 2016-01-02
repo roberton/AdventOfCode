@@ -2,7 +2,7 @@
 const fs = require('fs');
 const _ = require('lodash');
 
-// Answer?
+// Takes about 30s, almost all spent on the last couple of generations
 if (require.main === module) {
     main('1113222113', 30);
     // main('1', 5);
