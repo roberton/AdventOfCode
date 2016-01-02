@@ -38,13 +38,12 @@ function isValid(password) {
     return hasStraight(password);
 }
 
-// TODO: use reduce
+const POWERS = [3404825447, 148035889, 6436343, 279841, 12167, 529, 23, 1];
 function passwordToNumber(password) {
-    let number = 0;
-    for (let i = password.length - 1; i >= 0; i--) {
-        number += Math.pow(VALID_CHARS.length, password.length - i - 1) * VALID_CHARS.indexOf(password[i]);
-    }
-    return number;
+    return password.split('')
+        .reduce((total, character, index) => {
+            return total + (POWERS[index] * VALID_CHARS.indexOf(character));
+        }, 0);
 }
 
 function numberToPassword(number) {
@@ -65,6 +64,7 @@ function numberToPassword(number) {
     return password.join('');
 }
 
+// TODO: can use map instead of for?
 function countPairs(password) {
     let pairs = [];
     for (let pairSlot = 0; pairSlot < password.length - 1; pairSlot++) {
@@ -76,6 +76,7 @@ function countPairs(password) {
     return uniquePairs.length;
 }
 
+// TODO: can use map instead of for?
 function hasStraight(password) {
     for (let candidateStart = 0; candidateStart < password.length - 2; candidateStart++) {
         if (isStraight(password.substr(candidateStart, 3))) {
