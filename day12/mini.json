@@ -1,0 +1,35 @@
+[
+	["green", [{
+		"e": "green",
+		"a": 77,
+		"d": {
+			"c": "violet",
+			"a": "yellow",
+			"b": "violet"
+		},
+		"c": "yellow",
+		"h": "red",
+		"b": 144,
+		"g": {
+			"a": ["yellow", -48, 72, 87, {
+				"e": "violet",
+				"c": 123,
+				"a": 101,
+				"b": 87,
+				"d": "red",
+				"f": 88
+			}, {
+				"e": "red",
+				"c": 2,
+				"a": 1,
+				"g": "blue",
+				"b": "green",
+				"d": "violet",
+				"f": 170
+			}, "orange", 171, 162]
+		},
+		"f": "orange",
+		"i": "orange"
+    }]
+    ]
+]
