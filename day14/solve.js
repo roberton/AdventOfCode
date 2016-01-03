@@ -4,15 +4,24 @@ const _ = require('lodash');
 
 
 if (require.main === module) {
-    // main('input.txt', 100); // for testing
-    main('input.txt', 2503);    // answer is 2640
+    // main('input.txt', 200); // for testing
+    main('input.txt', 2503);    // answer is 2640 (or 1102 for part 2)
 }
 
 function main(filePath, time) {
     const data = fs.readFileSync(filePath, 'utf8');
     const reindeerStats = parseFileData(data);
-    const distances = distancesAfterSeconds(reindeerStats, time);
+    let points = buildInitialPoints(reindeerStats);
+    let distances;
+    for (let raceTime = 1; raceTime <= time; raceTime++) {
+        distances = distancesAfterSeconds(reindeerStats, raceTime);
+        awardPoints(distances, points);
+
+        // if (raceTime % 100 === 0) displayPoints(points);
+    }
     displayResults(distances, time);
+    console.log();
+    displayPoints(points, time);
 }
 
 function parseFileData(data) {
@@ -58,4 +67,28 @@ function displayResults(results, time) {
             }
         });
     console.log(`The winner is ${winner.name}!`);
+}
+
+// Returns simple object with reindeer names as keys and values initialised to zero
+function buildInitialPoints(stats) {
+    let pointsTable = {};
+    stats.forEach(stat => pointsTable[stat.name] = 0);
+    return pointsTable;
+}
+
+function awardPoints(distances, points) {
+    const maxDistance = _.sortBy(distances, d => d.distance)
+        .reverse()[0].distance;
+
+    const currentLeaders = distances.filter(d => d.distance === maxDistance);
+    currentLeaders.forEach(
+        function(leader) {
+            points[leader.name] += 1;
+        });
+}
+
+function displayPoints(points, time) {
+    console.log(`The final points table after ${time} seconds is as follows:`);
+    _.keys(points).forEach(
+        reindeer => console.log(`\t${reindeer} has ${points[reindeer]} points`));
 }
