@@ -10,12 +10,9 @@ if (require.main === module) {
 
 function main(filePath, time) {
     const data = fs.readFileSync(filePath, 'utf8');
-    console.log(data);
     const reindeerStats = parseFileData(data);
-    console.log(reindeerStats);
     const distances = distancesAfterSeconds(reindeerStats, time);
-    console.log();
-    console.log(distances);
+    displayResults(distances, time);
 }
 
 function parseFileData(data) {
@@ -43,13 +40,22 @@ function distanceForReindeerAfterSeconds(stat, time) {
     let elapsedTime = 0;
     let distanceCovered = 0;
     while (elapsedTime < time) {
-        // if (stat.name === 'Cupid') console.log(elapsedTime, distanceCovered);
-
         const flyingTime = Math.min(stat.duration, time - elapsedTime);
         distanceCovered += flyingTime * stat.speed;
         elapsedTime += flyingTime + stat.rest;
-
-        // if (stat.name === 'Cupid') console.log(elapsedTime, distanceCovered);
     }
     return { name: stat.name, distance: distanceCovered }
+}
+
+function displayResults(results, time) {
+    console.log(`The results after ${time} seconds are as follows:`);
+    let winner = { distance: -1 };
+    results.forEach(
+        (result) => {
+            console.log(`\t${result.name} covered ${result.distance} km`);
+            if (result.distance > winner.distance) {
+                winner = result;
+            }
+        });
+    console.log(`The winner is ${winner.name}!`);
 }
