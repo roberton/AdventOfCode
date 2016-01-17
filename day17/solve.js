@@ -19,8 +19,7 @@ function loadContainersFrom(filePath) {
 }
 
 function findCombinations(containers, quantity) {
-    let combinations = fillContainers(containers, [], quantity);
-    return combinations;
+    return fillContainers(containers, [], quantity);
 }
 
 function fillContainers(containers, used, eggnogLeft) {
@@ -29,18 +28,13 @@ function fillContainers(containers, used, eggnogLeft) {
         return [used];
     }
 
-    if (eggnogLeft < 0) {
-        return [];
-    }
-
-    if (containers.length === 0) {
-        return [];
-    }
+    if (eggnogLeft < 0) return [];
+    if (containers.length === 0) return [];
 
     const head = _.first(containers);
     const tail = _.rest(containers);
-    let happy = fillContainers(tail, used.concat(head), eggnogLeft - head);
-    return happy.concat(fillContainers(tail, used, eggnogLeft));
+    return fillContainers(tail, used.concat(head), eggnogLeft - head)
+        .concat(fillContainers(tail, used, eggnogLeft));
 }
 
 // Returns object key keys for length of combination and value the number of
@@ -58,6 +52,7 @@ function makeHistogramOfCombinations(combinations) {
     });
     return histogram;
 }
+
 
 module.exports = {
     findCombinations: findCombinations
