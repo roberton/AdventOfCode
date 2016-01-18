@@ -2,13 +2,16 @@
 const fs = require('fs');
 const _ = require('lodash');
 
+// 768 lights for 1st star version
+// 781 lights for 2nd star version
 if (require.main === module) {
     let grid = loadGridFrom('input.txt');   // or 'testInput.txt'
-    console.log(`Loaded grid of ${grid.size.width} by ${grid.size.height} cells. Initial grid has ${countCells(grid)} alive cells.`);
+    grid.dodgyLights = [0, 99, 9900, 9999];
+    console.log(`Loaded grid of ${grid.size.width} by ${grid.size.height} lights. Initial grid has ${countLights(grid)} lights on.`);
 
     _.times(100, (iteration) => {
         grid = iterate(grid);
-        console.log(`${iteration + 1} iteration: ${countCells(grid)} cells alive.`)
+        console.log(`${iteration + 1} iteration: ${countLights(grid)} lights on.`)
     });
 
     // const indexes = _.range(3 * 3);
@@ -28,24 +31,26 @@ function loadGridFrom(inputFilePath) {
             width: _.first(lines).length,
             height: lines.length,
         },
-        cells: cellBooleans
+        lights: cellBooleans
     };
 }
 
 function iterate(grid) {
     let newGrid = {
         size: grid.size,
-        cells: []
+        lights: [],
+        dodgyLights: grid.dodgyLights
     };
 
-    newGrid.cells = grid.cells.map((cell, index) =>
-        calcIfCellNextIteration(cell, countNeighboursForCellAt(index, grid))
+    newGrid.lights = grid.lights.map((light, index) =>
+        calcIfLightNextIteration(light, countNeighboursForLightAt(index, grid))
     );
+    grid.dodgyLights.forEach(index => newGrid.lights[index] = true);
 
     return newGrid;
 }
 
-function calcIfCellNextIteration(isAlive, neighbourCount) {
+function calcIfLightNextIteration(isAlive, neighbourCount) {
     if (neighbourCount === 3) {
         return true;
     }
@@ -55,11 +60,11 @@ function calcIfCellNextIteration(isAlive, neighbourCount) {
     return false;
 }
 
-function countNeighboursForCellAt(index, grid) {
+function countNeighboursForLightAt(index, grid) {
     const neighbourIndices = getNeighbourIndicesFor(index, grid.size);
     return neighbourIndices
         .reduce((total, nIndex) => {
-            return total + (grid.cells[nIndex] ? 1 : 0);
+            return total + (grid.lights[nIndex] ? 1 : 0);
         }, 0);
 }
 
@@ -91,26 +96,26 @@ function calcLocationByIndex(index, gridSize) {
     }
 }
 
-function countCells(grid) {
-    return grid.cells
-        .reduce((total, cell) => {
-            return total + (cell ? 1 : 0);
+function countLights(grid) {
+    return grid.lights
+        .reduce((total, light) => {
+            return total + (light ? 1 : 0);
         }, 0);
 }
 
 function printGrid(grid) {
-    console.log(`Grid is ${grid.size.width} by ${grid.size.height} cells.`);
+    console.log(`Grid is ${grid.size.width} by ${grid.size.height} lights.`);
     // TODO: make this use _.times()
     for (let y = 0; y < grid.size.height; y++) {
         const rowStartIndex = y * grid.size.height;
         const rowEndIndex = (y + 1) * grid.size.height;
-        console.log(mapCellLineToString(grid.cells.slice(rowStartIndex, rowEndIndex)));
+        console.log(mapLightLineToString(grid.lights.slice(rowStartIndex, rowEndIndex)));
     }
 }
 
-function mapCellLineToString(cellLine) {
-    return cellLine
-        .map(cell => cell ? '#' : '.')
+function mapLightLineToString(cellLine) {
+    return lightLine
+        .map(light => light ? '#' : '.')
         .join();
 }
 
