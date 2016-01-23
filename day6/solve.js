@@ -21,7 +21,7 @@ function main(inputFilePath) {
     grid = initialiseGrid(grid, 1000);
     console.log(`Number of lights on = ${countLights(grid)})`);
 
-    for (let i = 0; i < 50 /*operations.length*/; i++) {
+    for (let i = 0; i < operations.length; i++) {
         grid = applyOperationToGrid(grid, operations[i]);
         console.log(`Operation ${i + 1} / ${operations.length}`);
     }
