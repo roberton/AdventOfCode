@@ -3,7 +3,7 @@ const fs = require('fs');
 const _ = require('lodash');
 
 // 768 lights for 1st star version
-// 781 lights for 2nd star version
+// 781 lights for 2nd star version (0.6 seconds)
 if (require.main === module) {
     let grid = loadGridFrom('input.txt');   // or 'testInput.txt'
     grid.dodgyLights = [0, 99, 9900, 9999];
@@ -35,6 +35,7 @@ function loadGridFrom(inputFilePath) {
     };
 }
 
+// TODO: can make this const?
 function iterate(grid) {
     let newGrid = {
         size: grid.size,
@@ -71,7 +72,6 @@ function countNeighboursForLightAt(index, grid) {
 function getNeighbourIndicesFor(index, gridSize) {
     let neighbours = [];
     const location = calcLocationByIndex(index, gridSize);
-    // console.log(location);
 
     if ((location.x > 0) && (location.y > 0)) neighbours.push(index - gridSize.width - 1);
     if (location.y > 0) neighbours.push(index - gridSize.width);
